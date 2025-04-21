@@ -1,10 +1,11 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+
 const Carrusel = () => {
-    // Información de las ciudades 
+
     const cities = [
         { name: "New York", image: "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg" },
         { name: "Paris", image: "https://img.sixt.com/1600/Paris_%7C_in_TYPO_paris-city-content.jpg" },
