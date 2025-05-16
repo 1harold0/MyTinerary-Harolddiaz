@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchItinerariesByCity } from '../../slices/itinerariesSlice.js';
 import { FaChevronDown, FaChevronUp, FaHeart } from 'react-icons/fa';
@@ -7,21 +7,28 @@ import { FaChevronDown, FaChevronUp, FaHeart } from 'react-icons/fa';
 const Details = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();  
   const { items: itineraries, loading } = useSelector(state => state.itineraries);
+  const token = useSelector(state => state.auth.token); 
   const [city, setCity] = useState(null);
   const [openCards, setOpenCards] = useState({});
   const [likes, setLikes] = useState({});
 
   useEffect(() => {
-    dispatch(fetchItinerariesByCity(id));
+    if (!token) {
+      // Si no hay token, redirige al login
+      navigate('/login');
+    } else {
+      dispatch(fetchItinerariesByCity(id));
 
-    fetch(`http://localhost:8080/api/citysRouter/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log("Ciudad recibida:", data);
-        setCity(data);
-      });
-  }, [id]);
+      fetch(`http://localhost:8080/api/citysRouter/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("Ciudad recibida:", data);
+          setCity(data);
+        });
+    }
+  }, [id, token, dispatch, navigate]);
 
   const toggleCard = (itinId) => {
     setOpenCards(prev => ({
